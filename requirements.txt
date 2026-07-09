@@ -1,0 +1,32 @@
+# Azure SDK – core auth
+azure-identity>=1.17.0
+
+# Microsoft Purview – catalog & scanning
+azure-purview-catalog>=1.0.0b4
+azure-purview-scanning>=1.0.0b2
+
+# Microsoft Graph (Microsoft 365 / A365)
+# msgraph-sdk is the first-party Microsoft Graph Python SDK.
+msgraph-sdk>=1.5.0
+
+# Microsoft Entra / Azure management (users, groups, applications)
+# azure-identity is already listed above; add mgmt-graphrbac for legacy AAD ops
+# or rely on Graph SDK for modern Entra operations (recommended).
+azure-mgmt-authorization>=4.0.0
+
+# Environment & config
+python-dotenv>=1.0.0
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+
+# Structured logging
+structlog>=24.1.0
+
+# HTTP utilities (used by SDK update checker script)
+httpx>=0.27.0
+
+# Testing
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+pytest-mock>=3.14.0
+respx>=0.21.0        # Mock httpx calls in tests
