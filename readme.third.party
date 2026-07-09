@@ -1,0 +1,281 @@
+# Third-Party Agent Governance Policy
+
+**Repository:** `mward-msft1/secureagenttemplate`  
+**Version:** 1.0  
+**Effective date:** 2026-07-09  
+**Owner:** Platform Security + AI Engineering  
+**Review cadence:** Quarterly (or upon material change)
+
+---
+
+## 1. Purpose
+
+This policy establishes mandatory governance, security, privacy, and operational controls for onboarding and operating **third-party agents** integrated with the Secure Agent Template and related SDK integrations (A365, Purview, Entra/Graph).
+
+The objective is to ensure third-party agent usage is:
+- secure by default,
+- auditable,
+- compliant with contractual and regulatory obligations,
+- constrained to least privilege and least data access.
+
+---
+
+## 2. Scope
+
+This policy applies to:
+
+1. Any externally developed or vendor-hosted agent connected to systems using this template.
+2. Any first-party workflow invoking third-party agent APIs/services.
+3. Any integration that can read, process, transform, or export tenant/customer data.
+4. Non-production and production environments (with stricter controls in production).
+
+Out of scope:
+- purely internal offline test artifacts with no customer/tenant data,
+- integrations not invoking external agent behavior.
+
+---
+
+## 3. Definitions
+
+- **Third-party agent**: Any agent capability not authored and fully operated by the customer organization.
+- **Agent integration owner**: Team accountable for implementation, risk treatment, and lifecycle operations.
+- **Data steward**: Role responsible for classification, handling, and retention requirements.
+- **High-impact agent**: Agent handling regulated, sensitive, privileged, or business-critical operations.
+- **Kill switch**: Immediate control to disable third-party calls without full redeployment.
+
+---
+
+## 4. Governance Principles
+
+1. **Least privilege**: Grant only minimal permissions required for approved use cases.
+2. **Least data exposure**: Send only required fields to third-party agents.
+3. **Explicit trust boundaries**: Every third-party call crosses a documented trust boundary.
+4. **Default deny**: Disallow unknown operations, destinations, and data categories.
+5. **Defense in depth**: Combine identity controls, data controls, monitoring, and incident response.
+6. **Auditability**: Every third-party interaction must be attributable and reviewable.
+7. **Change control**: Contract/API/SDK changes require formal review before production promotion.
+
+---
+
+## 5. Required Approval Gates
+
+A third-party agent integration **must not** be enabled in production until all gates pass.
+
+### Gate A: Business and architecture approval
+- Business justification and scope documented.
+- Architecture review approved, including trust-boundary diagram.
+- Use-case criticality and impact tier assigned.
+
+### Gate B: Security and privacy approval
+- Threat model completed.
+- Data protection impact assessment completed where required.
+- Security controls mapped to this policy and validated.
+- Vendor assurance artifacts reviewed (SOC/ISO equivalent, pentest summary where available).
+
+### Gate C: Legal and procurement approval
+- Contract includes data processing and breach-notification obligations.
+- Sub-processor handling and transfer obligations reviewed.
+- Data retention/deletion commitments documented.
+
+### Gate D: Technical readiness
+- Identity, permission, redaction, logging, and kill switch controls implemented.
+- Non-production test evidence attached.
+- Incident runbook and escalation paths approved.
+
+---
+
+## 6. Identity and Access Controls (Entra/Graph)
+
+### 6.1 Credential model
+- Preferred: managed identity / workload identity federation / certificate auth.
+- Client secrets allowed only with documented exception and rotation controls.
+- Credentials must be isolated by environment and by third-party integration.
+
+### 6.2 Permission model
+- Separate app registrations or service principals per integration boundary.
+- Explicit operation-to-scope mapping required.
+- Broad wildcard permissions are prohibited unless approved exception exists.
+- Admin consent must follow formal approval workflow.
+
+### 6.3 Access governance
+- App owners assigned and reviewed.
+- Privileged assignments must be time-bound where supported.
+- Periodic access reviews required (at least quarterly).
+
+---
+
+## 7. Data Governance Controls (Purview-aligned)
+
+### 7.1 Data classification handling
+- Data classification and sensitivity labels must determine whether data is eligible for third-party processing.
+- Restricted classes require explicit business + security exception approval.
+
+### 7.2 Data minimization
+- Only approved fields may be sent to third-party agents.
+- PII, secrets, access tokens, and protected attributes must be redacted unless explicitly required and approved.
+
+### 7.3 Collection and boundary enforcement
+- Purview collections and governance boundaries must be enforced in data retrieval paths.
+- Cross-boundary data aggregation requires explicit approval.
+
+### 7.4 Lineage and evidence
+- Material transformations and outputs must be traceable to source context.
+- Evidence of controls must be retained per retention policy.
+
+---
+
+## 8. Runtime and Integration Controls (A365 + Adapter Layer)
+
+### 8.1 Allowed operations
+- Integration must maintain an allowlist of permitted third-party operations.
+- Unknown/unmapped operations must be blocked by default.
+
+### 8.2 Egress controls
+- Outbound destinations must be explicitly allowlisted.
+- Network policies should restrict unapproved domains/endpoints.
+
+### 8.3 Content controls
+- Input and output filtering must be applied.
+- Prompt and response guardrails must be configured for sensitive or regulated contexts.
+
+### 8.4 Reliability and safety
+- Timeouts, bounded retries, and circuit-breaker/fallback behavior should be configured.
+- Non-idempotent operations require replay protection strategy where applicable.
+
+---
+
+## 9. Logging, Monitoring, and Detection
+
+### 9.1 Mandatory telemetry
+Every third-party invocation must capture:
+- timestamp,
+- integration/agent identifier,
+- correlation ID,
+- operation name,
+- outcome status,
+- latency/duration,
+- retry count,
+- error category/code (if failed).
+
+### 9.2 Prohibited telemetry content
+Do not log:
+- tokens, secrets, or credential material,
+- full sensitive payloads,
+- unredacted personal data unless explicitly approved and protected.
+
+### 9.3 Alerting requirements
+Alerts must be configured for:
+- repeated authorization failures,
+- unusual volume/spend spikes,
+- denied operation attempts,
+- egress to non-approved destinations,
+- policy bypass attempts,
+- high failure rates and prolonged degradation.
+
+---
+
+## 10. Incident Response and Kill Switch
+
+### 10.1 Kill switch
+A tested kill switch must exist to disable third-party calls immediately.
+
+### 10.2 Incident handling
+Runbooks must include:
+- severity classification,
+- containment steps,
+- vendor escalation contacts,
+- forensic log capture guidance,
+- customer/tenant communication requirements,
+- regulatory reporting requirements where applicable.
+
+### 10.3 Post-incident
+- Root cause analysis required.
+- Corrective and preventive actions tracked to closure.
+- Re-approval required before re-enabling a disabled high-impact integration.
+
+---
+
+## 11. SDK/API Change Management
+
+For third-party integrations and dependency changes:
+
+1. Track versions and sources in repository metadata (e.g., `sdk-versions.json`).
+2. Use scheduled update checks and PR-based review workflows.
+3. Require compatibility and regression tests before production rollout.
+4. Re-assess permissions when new SDK capabilities are introduced.
+5. For preview SDKs/APIs, pin versions and document additional risk acceptance.
+
+---
+
+## 12. Compliance and Audit
+
+- Control evidence must be retained in auditable systems.
+- Quarterly governance review required for each active third-party integration.
+- High-impact integrations may require enhanced review cadence.
+- Non-compliant integrations must be remediated or disabled.
+
+---
+
+## 13. Exceptions
+
+Any exception to this policy requires:
+- documented rationale,
+- compensating controls,
+- explicit approval from Security and Engineering leadership,
+- expiration date and remediation plan.
+
+Expired exceptions are invalid and must be re-approved or removed.
+
+---
+
+## 14. Enforcement
+
+Non-adherence may result in:
+- rejection of production release,
+- forced disablement of third-party integration,
+- escalation to security governance board.
+
+---
+
+## 15. Roles and Responsibilities
+
+- **Integration Owner:** implements controls, maintains documentation, ensures ongoing compliance.
+- **Security Team:** reviews risk, validates controls, approves exceptions.
+- **Data Steward/Privacy:** validates data classifications and handling constraints.
+- **Operations/SRE:** ensures monitoring, alerting, and incident readiness.
+- **Legal/Procurement:** validates contractual and vendor obligations.
+
+---
+
+## 16. Minimum Implementation Checklist (Operational)
+
+- [ ] Third-party integration registered with owner and criticality.
+- [ ] Risk review and threat model completed.
+- [ ] Least-privilege permissions approved and implemented.
+- [ ] Data allowlist/denylist documented and enforced.
+- [ ] Redaction and content filtering enabled.
+- [ ] Egress allowlist configured.
+- [ ] Correlation logging and alerts operational.
+- [ ] Kill switch tested.
+- [ ] Incident runbook approved.
+- [ ] SDK update workflow active and reviewed.
+- [ ] Quarterly review scheduled.
+
+---
+
+## 17. Related Repository Artifacts
+
+- `README.customer.md`
+- `docs/field-reference.md`
+- `docs/customer-onboarding-checklist.md`
+- `sdk-versions.json`
+- `.github/workflows/sdk-watch.yml` (when present)
+
+---
+
+## 18. Document Control
+
+- **Current version:** 1.0
+- **Last updated:** 2026-07-09
+- **Next review due:** 2026-10-09
+- **Change summary:** Initial policy draft for third-party agent governance
