@@ -281,3 +281,81 @@ See [docs/sdk-updates.md](docs/sdk-updates.md) for update history.
 2. Add or update tests in `tests/`.
 3. Run `pytest tests/ -v` to confirm everything passes.
 4. Open a pull request with a clear description of the change.
+
+---
+
+## Engineering Reference (Internal)
+
+This section contains internal engineering guidance for contributors and delivery teams.
+
+### Engineering objectives
+
+1. **Composable adapter architecture** for Purview/A365/Entra integrations.
+2. **Secure-by-default auth and config** (no embedded secrets, principle of least privilege).
+3. **Operational readiness** (structured logs, deterministic error handling, CI automation).
+4. **SDK drift management** (automated update checks + PR-based update flow).
+5. **Customer handoff quality** (clear extension points and override mechanics).
+
+---
+
+### Adapter contract
+
+Each SDK adapter implements a consistent pattern:
+
+- Constructor receives `AgentSettings`; builds the SDK client (or mock).
+- Methods are granular (one operation per method) with structured logging on entry and error.
+- All public methods use typed return values (`dict[str, Any]` or `list[dict[str, Any]]`).
+- Errors are re-raised after logging; callers decide on retry strategy.
+
+---
+
+### Error handling strategy
+
+Normalize all failures — log with `logger.error(...)`, include `error=str(exc)`, and re-raise.
+Callers or framework layers map adapter errors to domain errors as needed.
+
+Suggested taxonomy for wrapping exceptions:
+- `AuthError` — `ClientAuthenticationError` from azure-identity
+- `PermissionError` — HTTP 403 from Graph / Purview
+- `ValidationError` — bad config / missing env vars
+- `ExternalServiceError` — non-retryable SDK errors
+- `TransientDependencyError` — 429 / 503 / network timeout
+
+---
+
+### CI/CD expectations
+
+Minimum CI steps:
+1. `pip install -e ".[dev]"`
+2. `ruff check src/ tests/`
+3. `python -m pytest tests/ -v`
+
+---
+
+### Security requirements checklist
+
+- [ ] No secrets committed to source control.
+- [ ] `.env.example` contains placeholders only.
+- [ ] Scopes/roles documented and least-privilege validated.
+- [ ] Token and PII redaction tested.
+- [ ] Dependency update policy defined (`pip-audit` / Dependabot).
+
+### Customer handoff checklist
+
+Before sending to a customer:
+
+- [ ] Replace placeholder setup commands with runtime-specific commands.
+- [ ] Confirm adapter methods map to customer use cases.
+- [ ] Confirm Entra app registration instructions are accurate.
+- [ ] Validate required permissions and consent path.
+- [ ] Validate SDK update workflow runs in customer fork/org.
+- [ ] Add organization-specific compliance statements.
+
+---
+
+### Contribution standards
+
+- Keep adapter APIs backward compatible where possible.
+- Prefer additive changes and feature flags over breaking changes.
+- Require tests for auth scope resolution, error normalization, and update checker parsing.
+- Every integration change must update the matching `docs/integrations/*.md`.
