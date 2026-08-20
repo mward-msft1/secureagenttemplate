@@ -1,0 +1,37 @@
+{
+  "last_checked": "2026-07-09",
+  "sdks": {
+    "azure-purview-catalog": {
+      "description": "Microsoft Purview Catalog SDK (catalog entities, glossaries, lineage, classifications)",
+      "pypi_package": "azure-purview-catalog",
+      "pypi_url": "https://pypi.org/pypi/azure-purview-catalog/json",
+      "docs_url": "https://learn.microsoft.com/python/api/overview/azure/purview",
+      "current_version": "1.0.0b4",
+      "last_updated": "2026-07-09"
+    },
+    "azure-purview-scanning": {
+      "description": "Microsoft Purview Scanning SDK (data source registration, scan triggers)",
+      "pypi_package": "azure-purview-scanning",
+      "pypi_url": "https://pypi.org/pypi/azure-purview-scanning/json",
+      "docs_url": "https://learn.microsoft.com/python/api/overview/azure/purview",
+      "current_version": "1.0.0b2",
+      "last_updated": "2026-07-09"
+    },
+    "msgraph-sdk": {
+      "description": "Microsoft Graph Python SDK \u2013 primary entry point for Microsoft 365 (A365) and Entra ID operations",
+      "pypi_package": "msgraph-sdk",
+      "pypi_url": "https://pypi.org/pypi/msgraph-sdk/json",
+      "docs_url": "https://learn.microsoft.com/graph/sdks/sdks-overview",
+      "current_version": "1.58.0",
+      "last_updated": "2026-07-09"
+    },
+    "azure-identity": {
+      "description": "Azure Identity SDK \u2013 credential types for all Azure SDK authentication (used for Purview, Graph, and Entra)",
+      "pypi_package": "azure-identity",
+      "pypi_url": "https://pypi.org/pypi/azure-identity/json",
+      "docs_url": "https://learn.microsoft.com/python/api/overview/azure/identity-readme",
+      "current_version": "1.25.3",
+      "last_updated": "2026-07-09"
+    }
+  }
+}
