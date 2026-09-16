@@ -16,6 +16,9 @@ unified data-governance platform.  This adapter covers two main sub-services:
 > This is the authoritative starting point for API, SDK, and integration
 > guidance when extending or troubleshooting the `PurviewAdapter`.
 
+For agent middleware guidance, see the [Microsoft Agent Framework Purview
+middleware documentation](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/middleware/purview?pivots=programming-language-python).
+
 | Sub-service | SDK package | Purpose |
 |---|---|---|
 | **Purview Catalog** | `azure-purview-catalog` | Search, read, and write catalog entities, glossaries, classifications, lineage |
