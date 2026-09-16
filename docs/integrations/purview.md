@@ -10,6 +10,12 @@ and extension points for the `PurviewAdapter` in `src/adapters/purview.py`.
 [Microsoft Purview](https://learn.microsoft.com/purview/) is Microsoft's
 unified data-governance platform.  This adapter covers two main sub-services:
 
+> **Microsoft Purview developer documentation:**
+> https://learn.microsoft.com/en-us/purview/developer/
+>
+> This is the authoritative starting point for API, SDK, and integration
+> guidance when extending or troubleshooting the `PurviewAdapter`.
+
 | Sub-service | SDK package | Purpose |
 |---|---|---|
 | **Purview Catalog** | `azure-purview-catalog` | Search, read, and write catalog entities, glossaries, classifications, lineage |
@@ -135,4 +141,5 @@ The current tracked version of `azure-purview-catalog` is recorded in
 the [sdk-watch workflow](../../.github/workflows/sdk-watch.yml).
 
 **PyPI:** https://pypi.org/project/azure-purview-catalog/  
-**Docs:** https://learn.microsoft.com/python/api/overview/azure/purview
+**Docs:** https://learn.microsoft.com/python/api/overview/azure/purview  
+**Developer docs:** https://learn.microsoft.com/en-us/purview/developer/

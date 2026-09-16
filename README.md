@@ -27,7 +27,10 @@ This repository gives your team a clean, opinionated starting point for
 building AI agents that need to:
 
 - **Govern data** via [Microsoft Purview](https://learn.microsoft.com/purview/)
-  (catalog, scanning, lineage, classification).
+  (catalog, scanning, lineage, classification). For API, SDK, and
+  integration guidance, see the
+  [Microsoft Purview developer documentation](https://learn.microsoft.com/en-us/purview/developer/),
+  the authoritative starting point for building against Purview.
 - **Interact with Microsoft 365** workloads (users, groups, mail, SharePoint,
   Teams) through the
   [Microsoft Graph API](https://learn.microsoft.com/graph/overview).
