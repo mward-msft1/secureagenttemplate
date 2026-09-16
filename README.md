@@ -282,21 +282,7 @@ See [docs/sdk-updates.md](docs/sdk-updates.md) for update history.
 3. Run `pytest tests/ -v` to confirm everything passes.
 4. Open a pull request with a clear description of the change.
 
----
 
-## Engineering Reference (Internal)
-
-This section contains internal engineering guidance for contributors and delivery teams.
-
-### Engineering objectives
-
-1. **Composable adapter architecture** for Purview/A365/Entra integrations.
-2. **Secure-by-default auth and config** (no embedded secrets, principle of least privilege).
-3. **Operational readiness** (structured logs, deterministic error handling, CI automation).
-4. **SDK drift management** (automated update checks + PR-based update flow).
-5. **Customer handoff quality** (clear extension points and override mechanics).
-
----
 
 ### Adapter contract
 
