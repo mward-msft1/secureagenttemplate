@@ -31,6 +31,8 @@ building AI agents that need to:
   integration guidance, see the
   [Microsoft Purview developer documentation](https://learn.microsoft.com/en-us/purview/developer/),
   the authoritative starting point for building against Purview.
+  For agent middleware guidance, see the
+  [Microsoft Agent Framework Purview middleware documentation](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/middleware/purview?pivots=programming-language-python).
 - **Interact with Microsoft 365** workloads (users, groups, mail, SharePoint,
   Teams) through the
   [Microsoft Graph API](https://learn.microsoft.com/graph/overview).
